@@ -21,7 +21,7 @@ wss.on('connection', (ws: WebSocket) => {
     })
 
     client.on('message', (topic, message) => {
-        ws.send(message);
+        ws.send(message.toString());
     })
 });
 
