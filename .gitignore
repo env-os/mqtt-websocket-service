@@ -1,3 +1,5 @@
+ormconfig.json
+
 # Logs
 logs
 *.log
@@ -59,3 +61,9 @@ typings/
 
 # next.js build output
 .next
+
+# file env
+.env
+
+# escluidi la cartella build
+build/
