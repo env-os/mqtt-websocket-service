@@ -20,6 +20,7 @@
   "dependencies": {
     "@types/socket.io": "^2.1.2",
     "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
     "mqtt": "^2.18.8",
     "socket.io": "^2.2.0",
     "ws": "^7.0.0"
