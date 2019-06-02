@@ -67,3 +67,6 @@ typings/
 
 # escluidi la cartella build
 build/
+
+# escludi file con chiavi
+*.pem
