@@ -45,7 +45,7 @@ wss.on('connection', (ws: WebSocket) => {
     console.log(`Connected to mqtt_broker`)
 
     ws.on('message', (topic_r: string) => {
-        if(topic!=null)
+        if(topic!=' ')
         {
             client.unsubscribe(topic);
             console.log(`Unsubscribe by topic: ${topic}`)
