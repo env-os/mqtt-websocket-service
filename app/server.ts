@@ -40,16 +40,24 @@ const wss = new WebSocket.Server({ server,
 });
 
 wss.on('connection', (ws: WebSocket) => {
+    console.log(`Connected to websocket`)
     var client = mqtt.connect(brokerUrl);
+    console.log(`Connected to mqtt_broker`)
 
     ws.on('message', (topic_r: string) => {
-        client.unsubscribe(topic);
+        if(topic!=null)
+        {
+            client.unsubscribe(topic);
+            console.log(`Unsubscribe by topic: ${topic}`)
+        }
         topic = process.env.TOPIC || topic_r;
         client.subscribe(topic);
+        console.log(`Subscribe by topic: ${topic}`)
     })
 
     client.on('message', (topic, message) => {
         ws.send(message.toString());
+        console.log(`Send -> ${message} to topic: ${topic} `)
     })
 })
 
