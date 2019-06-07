@@ -8,7 +8,6 @@ const jwt = require('jsonwebtoken');
 
 
 const brokerUrl = process.env.BROKER_URL || 'mqtt://localhost';
-var topic = process.env.TOPIC || ' ';
 const port = process.env.PORT || 8997;
 const app = express();
 
@@ -40,19 +39,19 @@ const wss = new WebSocket.Server({ server,
 });
 
 wss.on('connection', (ws: WebSocket) => {
-    console.log(`Connected to websocket`)
+    console.log(`Websocket connection established.`)
     var client = mqtt.connect(brokerUrl);
-    console.log(`Connected to mqtt_broker`)
+    console.log(`MQTT Broker connection established.`)
 
-    ws.on('message', (topic_r: string) => {
-        if(topic!=' ')
-        {
-            client.unsubscribe(topic);
-            console.log(`Unsubscribe by topic: ${topic}`)
+    let actual_topic: string = '';
+    ws.on('message', (required_topic: string) => {
+        if(actual_topic != ''){
+            client.unsubscribe(actual_topic);
+            console.log(`Topic subscription removed (${actual_topic})`)
         }
-        topic = process.env.TOPIC || topic_r;
-        client.subscribe(topic);
-        console.log(`Subscribe by topic: ${topic}`)
+        client.subscribe(required_topic);
+        console.log(`Topic subscription started (${required_topic})`)
+        actual_topic = required_topic;
     })
 
     client.on('message', (topic, message) => {
