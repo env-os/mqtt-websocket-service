@@ -1,6 +1,6 @@
-# Signals Real-Time Service
+# MQTT Werbsocket service
 
-Service for send signals in real-time.
+Service for read MQTT signals with websockets.
 
 ## Getting Started
 
