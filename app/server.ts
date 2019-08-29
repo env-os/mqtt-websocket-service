@@ -3,37 +3,35 @@ import http from 'http';
 import mqtt from 'mqtt';
 import WebSocket from 'ws';
 import fs from 'fs'
+import { auth, initializeApp, credential } from "firebase-admin";
+import { isUndefined } from 'util';
 
-const jwt = require('jsonwebtoken');
+var serviceAccount = require('../ServiceAccountKey.json');
 
 
 const brokerUrl = process.env.BROKER_URL || 'mqtt://localhost';
 const port = process.env.PORT || 8997;
 const app = express();
 
-var cert_pub = fs.readFileSync('./envos.pem');
 const server = http.createServer(app);
 
 const wss = new WebSocket.Server({ server,
-    verifyClient: function (info, cb) {
-        var token = info.req.headers.token
-        if (!token)
+    verifyClient: async function (info, cb) {
+        var token = info.req.headers.authorization;
+
+        const user = await auth().verifyIdToken(String(token))
+        .then(function(user){
+            return user
+        })
+        .catch(function(err){
+            console.log(err)
+        })
+
+        if(isUndefined(user))
+        {
             cb(false, 401, 'Unauthorized')
-        else {
-           jwt.verify(token, cert_pub,
-            {
-                audience: process.env.AUDIENCE,
-                issuer: process.env.ISSUER,
-                ignoreExpiration: false,
-                algorithms: ['RS256']
-            }, function (err: any) {
-                if (err) {
-                    console.log(err)
-                    cb(false, 401, 'Unauthorized')
-                } else {
-                    cb(true)
-                }
-            })
+        }else{
+            cb(true)
         }
     }
 });
@@ -61,5 +59,9 @@ wss.on('connection', (ws: WebSocket) => {
 })
 
 server.listen(port, () => {
+    initializeApp({
+        databaseURL: "https://italy-os.firebaseio.com",
+        credential: credential.cert(serviceAccount)
+    })
     console.log(`Server started on port ${port}`);
 });
