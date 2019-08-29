@@ -70,3 +70,5 @@ build/
 
 # escludi file con chiavi
 *.pem
+
+ServiceAccountKey.json

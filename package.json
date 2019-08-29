@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "dev": "ts-node-dev --respawn --transpileOnly ./app/app.ts",
+    "prod": "tsc && node ./build/app.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +22,7 @@
   "dependencies": {
     "@types/socket.io": "^2.1.2",
     "express": "^4.17.1",
+    "firebase-admin": "^8.2.0",
     "jsonwebtoken": "^8.5.1",
     "mqtt": "^2.18.8",
     "socket.io": "^2.2.0",
